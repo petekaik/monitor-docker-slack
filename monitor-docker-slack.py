@@ -100,6 +100,8 @@ def monitor_docker_slack(docker_sock_file, white_pattern_list):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument('--slack_username', required=True, \
+                        help="Slack Username.", type=str)
     parser.add_argument('--slack_token', required=True, \
                         help="Slack Token.", type=str)
     parser.add_argument('--slack_channel', required=True, \
@@ -117,20 +119,20 @@ if __name__ == '__main__':
     if white_pattern_list == ['']:
         white_pattern_list = []
 
+    slack_username = l.slack_username
     slack_channel = l.slack_channel
     slack_token = l.slack_token
     msg_prefix = l.msg_prefix
 
+    if slack_username == '':
+        print("Warning: Please provide slack username")
     if slack_channel == '':
         print("Warning: Please provide slack channel, to receive alerts properly.")
     if slack_token == '':
         print("Warning: Please provide slack token.")
 
     slack_client = SlackClient(slack_token)
-
-    # TODO
-    slack_username = "@denny"
-
+  
     has_send_error_alert = False
     while True:
         (status, err_msg) = monitor_docker_slack("/var/run/docker.sock", white_pattern_list)
